@@ -9,47 +9,50 @@ const firebaseConfig = {
   appId: "1:461755627900:web:e20c010dc21cc79ac3ccf9"
 };
 
-// initialize firebase
+// Initialiser Firebase
 firebase.initializeApp(firebaseConfig);
 
-// reference your database
+// Référence à votre base de données
 var contactFormDB = firebase.database().ref("contactFormsb");
 
+// Écouteur d'événement pour la soumission du formulaire
 document.getElementById("contactForm").addEventListener("submit", submitForm);
 
 function submitForm(e) {
-  e.preventDefault();
+  e.preventDefault(); // Empêche le rechargement de la page
 
+  // Récupérer les valeurs du formulaire
   var name = getElementVal("name");
   var email = getElementVal("email");
   var message = getElementVal("message");
 
-  console.log(name, email, message);
+  // Enregistrer les messages dans Firebase
   saveMessages(name, email, message);
 
-  // // enable the alert
-  // document.querySelector(".alert").style.display = "block";
+  // Afficher l'alerte de succès
+  document.getElementById("alertSuccess").style.display = "block";
+  
+  // Masquer l'alerte après 3 secondes
+  setTimeout(() => {
+      document.getElementById("alertSuccess").style.display = "none";
+  }, 3000);
 
-  // // remove the alert
-  // setTimeout(() => {
-  //   document.querySelector(".alert").style.display = "none";
-  // }, 3000);
-
-  // reset the form
+  // Réinitialiser le formulaire
   document.getElementById("contactForm").reset();
-
 }
 
+// Fonction pour sauvegarder les messages dans Firebase
 const saveMessages = (name, email, message) => {
-  var newContactForm = contactFormDB.push();
+  var newContactForm = contactFormDB.push(); // Créer une nouvelle entrée
 
   newContactForm.set({
-    fullname: name,
-    email: email,
-    selectwhere: message
+      fullname: name,
+      email: email,
+      message: message
   });
 };
 
+// Fonction pour obtenir la valeur des éléments de formulaire
 const getElementVal = (id) => {
-  return document.getElementById(id).value;
+  return document.getElementById(id).value; // Récupérer la valeur de l'élément par son ID
 };
